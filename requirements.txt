@@ -2,3 +2,4 @@ openai
 librosa
 boto
 flask
+openai-whisper
