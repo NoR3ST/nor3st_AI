@@ -25,8 +25,3 @@ def get_answer():
         transcribed_text = model.result["answer"]
         return transcribed_text
         
-        
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port="5000")
-    
-## docker run -v D:\nor3st\nor3st_AI:/app -p 3000:5000 app
