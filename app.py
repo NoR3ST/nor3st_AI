@@ -22,6 +22,6 @@ def get_answer():
         
     with Education(request) as model:
         model.user_voice_to_text()
-        transcribed_text = model.result["answer"]
+        transcribed_text = model.result["answer"]["segments"][0]["text"]
         return transcribed_text
         
