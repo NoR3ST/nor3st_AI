@@ -8,6 +8,10 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+@app.route('/', methods=["GET"])
+def hello():
+    return "hello"
+
 @app.route('/get_answer', methods=["GET"])
 def get_answer():
     
