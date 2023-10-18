@@ -1,7 +1,6 @@
 import json
 from gtts import gTTS
 import os
-
 class lectureVoiceMaker:
     def __init__(self, full_text_file_location, filename):
         self.filename = filename
