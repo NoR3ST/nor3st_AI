@@ -1,10 +1,6 @@
 import json
 from gtts import gTTS
 import os
-import logging
-
-logging.basicConfig(filename='app.log', level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 class lectureVoiceMaker:
     def __init__(self, full_text_file_location, filename):
         self.filename = filename
@@ -63,6 +59,5 @@ class lectureVoiceMaker:
         self.all_sentence_to_word()
         filepath = os.path.join("lecture_source/file_meta_data", self.filename)
         filename = f"{filepath}.json"
-        logging.debug(self.result)
         with open(filename, "w") as file:
             json.dump(self.result, file, indent=4, ensure_ascii=False)

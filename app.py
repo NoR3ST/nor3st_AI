@@ -21,9 +21,9 @@ def get_answer():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
         voice.save(file_path)
         
-    with Education(request) as model:
-        model.user_voice_to_text()
-        transcribed_text = model.result["answer"]["segments"][0]["text"]
+    with Education(request) as result:
+        result.user_voice_to_text()
+        transcribed_text = result["answer"]["segments"][0]["text"]
         return transcribed_text
         
 @app.route("/save_sentences_with_voice", methods=["POST"])
