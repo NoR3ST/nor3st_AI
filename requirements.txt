@@ -3,3 +3,4 @@ librosa
 boto
 flask
 openai-whisper
+gTTS
