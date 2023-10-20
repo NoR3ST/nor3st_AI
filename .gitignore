@@ -1,3 +1,5 @@
 lecture_source
 *.pyc
 *.log
+.env
+llama-2-7b-chat.Q4_K_M.gguf
