@@ -18,5 +18,5 @@ class Education:
 
 
     def user_voice_to_score(self):
-	    # self.result["score"] = self.model
+	    # self.result["score"] = 
         pass
