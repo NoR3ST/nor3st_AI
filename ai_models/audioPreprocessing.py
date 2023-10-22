@@ -3,6 +3,25 @@ import itertools
 from pydub import AudioSegment
 from pydub.silence import detect_silence
 
+
+# 작은 데시벨의 소음과 무음 잘라서 저장
+def trim_audio_data(audio_files):
+
+  trimmed_audio_data = []
+  top_db=40
+
+  for audio_file in audio_files:
+    y, sr = librosa.load(audio_file, sr=16000)
+    y_trimmed, idx  = librosa.effects.trim(y, top_db=top_db)
+
+    start_idx, end_idx = idx[0], idx[1]
+
+    trimmed_sound = y_trimmed[start_idx:end_idx]
+    trimmed_audio_data.append(trimmed_sound)
+
+  return trimmed_audio_data
+
+
 # 데시벨(dB) 값을 실제 파형의 진폭 값으로 변환
 def db_to_float(db, using_amplitude=True):
     db = float(db)
@@ -116,19 +135,8 @@ def only_voice(audio_file, min_silence_length = 900, silence_thresh=-16):
   return non_silence_audio_combined
 
 
-# 작은 데시벨의 소음과 무음 잘라서 저장
-def trim_audio_data(audio_files):
-
-  trimmed_audio_data = []
-  top_db=40
-
-  for audio_file in audio_files:
-    y, sr = librosa.load(audio_file, sr=16000)
-    y_trimmed, idx  = librosa.effects.trim(y, top_db=top_db)
-
-    start_idx, end_idx = idx[0], idx[1]
-
-    trimmed_sound = y_trimmed[start_idx:end_idx]
-    trimmed_audio_data.append(trimmed_sound)
-
-  return trimmed_audio_data
+audio = './static/hello.m4a'
+audio_file = AudioSegment.from_file(audio, format="m4a")
+audio_file = match_target_amplitude(audio_file, -11.0)
+voice = only_voice(audio_file)
+voice.export('./static/hello_preprocessing.mp3', format='mp3')

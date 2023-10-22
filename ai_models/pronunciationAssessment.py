@@ -50,3 +50,4 @@ print(pcm_file_path)
 
 score = pronunciation_assessment(pcm_file_path, ' ', '안녕하세요')
 print(score)
+
