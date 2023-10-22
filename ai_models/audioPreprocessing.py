@@ -1,10 +1,7 @@
 import librosa
-import sklearn
-from sklearn.preprocessing import StandardScaler
 import itertools
 from pydub import AudioSegment
 from pydub.silence import detect_silence
-import math
 
 # 데시벨(dB) 값을 실제 파형의 진폭 값으로 변환
 def db_to_float(db, using_amplitude=True):
