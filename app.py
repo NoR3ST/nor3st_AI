@@ -21,8 +21,7 @@ def get_answer():
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
         voice.save(file_path)
         
-    with Education(request) as result:
-        result.user_voice_to_text()
+    with Education(request, url="text") as result:
         transcribed_text = result["answer"]["segments"][0]["text"]
         return transcribed_text
         
