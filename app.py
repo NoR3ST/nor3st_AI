@@ -1,8 +1,10 @@
 from flask import Flask, request, send_file, jsonify
 from model.Education import Education
 from ai_models.lectureVoiceMaker import lectureVoiceMaker
-from ai_models.chatbot_gpt import MySenior
+from ai_models.my_senior import MySenior
+from ai_models.simulation import Simulation 
 import os
+
 
 app = Flask(__name__)
 
@@ -57,10 +59,24 @@ def save_doc():
         return jsonify({"error": str(e)})
 
 @app.route("/question", methods=["POST"])
-def save_doc():
+def question_to_senior():
     try:
         with MySenior(request=request, url="question") as senior:
             return senior["answer"]
+        
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+
+@app.route("/simulation/question", methods=["POST"])
+def simulation():
+    try:
+        voice = request.files["voice"]
+        if voice:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
+            voice.save(file_path)
+        with Simulation(request=request) as simulation:
+            return simulation
         
     except Exception as e:
         return jsonify({"error": str(e)})

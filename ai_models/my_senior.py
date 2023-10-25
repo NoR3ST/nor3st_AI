@@ -1,7 +1,7 @@
 import os
 import openai
 from langchain.document_loaders import DirectoryLoader
-from langchain.document_loaders.pdf import PyPDFLoader
+from langchain.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Chroma
