@@ -1,6 +1,7 @@
 from flask import Flask, request, send_file, jsonify
 from model.Education import Education
 from ai_models.lectureVoiceMaker import lectureVoiceMaker
+from ai_models.chatbot_gpt import MySenior
 import os
 
 app = Flask(__name__)
@@ -42,6 +43,24 @@ def save_sentences_with_voice():
         meta_data_path = os.path.join("lecture_source/file_meta_data", filename)
         with lectureVoiceMaker(recieved_filepath, save_location) as voiceMaker :
             return jsonify({"code": 200, "message": "File saved successfully", "meta_file_location": meta_data_path})
+        
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+@app.route("/save_doc", methods=["POST"])
+def save_doc():
+    try:
+        with MySenior(request=request, url="save_doc") as senior:
+            return senior["result"]
+        
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+@app.route("/question", methods=["POST"])
+def save_doc():
+    try:
+        with MySenior(request=request, url="question") as senior:
+            return senior["answer"]
         
     except Exception as e:
         return jsonify({"error": str(e)})
