@@ -63,4 +63,4 @@ question = "메타버스아카데미 융합 프로젝트의 목적이 뭐야?"
 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0)
 qa_chain = RetrievalQA.from_chain_type(llm, retriever=retriever)
 response = qa_chain({"query": question})
-print(response)
+# print(response)

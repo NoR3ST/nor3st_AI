@@ -1,8 +1,11 @@
 from flask import Flask, request, send_file, jsonify
+# from ai_models.pronunciationAssessment import convert_score, mp32pcm, pronunciation_assessment
 from model.Education import Education
 from ai_models.lectureVoiceMaker import lectureVoiceMaker
 from ai_models.chatbot_gpt import MySenior
+# from ai_models.audioPreprocessing import match_target_amplitude, only_voice
 import os
+from pydub import AudioSegment
 
 app = Flask(__name__)
 
@@ -64,3 +67,32 @@ def save_doc():
         
     except Exception as e:
         return jsonify({"error": str(e)})
+
+# @app.route("/get_score", methods=["POST"])
+# def make_score():
+
+#     voice = request.files["voice"]
+
+#     if voice: 
+#         file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
+#         voice.save(file_path)
+
+#     # 오디오 전처리
+#     audio_file = AudioSegment.from_file(voice, format="mp3")
+#     audio_file = match_target_amplitude(audio_file, -11.0)
+#     preprocessed_audio = only_voice(audio_file)
+
+#     preprocessed_audio_filepath = os.path.join(file_path, '_preprocessing.mp3')
+#     preprocessed_audio.export(preprocessed_audio_filepath, format='mp3')
+    
+#     # 발음평가
+#     pcm_file_path = os.path.join(file_path, '_pcm.pcm')
+#     pcm_file = mp32pcm(preprocessed_audio_filepath, pcm_file_path)
+
+#     script = request.json["audio_sentence"]
+
+#     score = pronunciation_assessment(pcm_file, script)
+#     score = convert_score((float(score)))
+#     print(score)
+
+#     return score

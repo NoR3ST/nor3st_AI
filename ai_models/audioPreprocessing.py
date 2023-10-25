@@ -135,8 +135,8 @@ def only_voice(audio_file, min_silence_length = 900, silence_thresh=-16):
   return non_silence_audio_combined
 
 
-audio = './static/hello.m4a'
-audio_file = AudioSegment.from_file(audio, format="m4a")
-audio_file = match_target_amplitude(audio_file, -11.0)
-voice = only_voice(audio_file)
-voice.export('./static/hello_preprocessing.mp3', format='mp3')
+# audio = './static/hello.m4a'
+# audio_file = AudioSegment.from_file(audio, format="m4a")
+# audio_file = match_target_amplitude(audio_file, -11.0)
+# voice = only_voice(audio_file)
+# voice.export('./static/hello_preprocessing.mp3', format='mp3')
