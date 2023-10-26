@@ -3,10 +3,16 @@ from ai_models.my_senior import MySenior
 from ai_models.pronunciationAssessment import convert_score, mp32pcm, pronunciation_assessment
 from model.Education import Education
 from ai_models.lectureVoiceMaker import lectureVoiceMaker
+<<<<<<< HEAD
 # from ai_models.chatbot_gpt import MySenior
 from ai_models.audioPreprocessing import match_target_amplitude, only_voice
+=======
+from ai_models.my_senior import MySenior
+from ai_models.simulation import Simulation 
+>>>>>>> e8e96b0114238bcbd48129204afacff908777cd1
 import os
 from pydub import AudioSegment
+
 
 app = Flask(__name__)
 
@@ -61,13 +67,14 @@ def save_sentences_with_voice():
 #         return jsonify({"error": str(e)})
 
 @app.route("/question", methods=["POST"])
-def save_doc():
+def question_to_senior():
     try:
         with MySenior(request=request, url="question") as senior:
             return senior["answer"]
         
     except Exception as e:
         return jsonify({"error": str(e)})
+<<<<<<< HEAD
 
 @app.route("/get_score", methods=["POST"])
 def make_score():
@@ -108,3 +115,19 @@ def make_score():
         result = {"score": score}
 
         return jsonify(result) 
+=======
+    
+
+@app.route("/simulation/question", methods=["POST"])
+def simulation():
+    try:
+        voice = request.files["voice"]
+        if voice:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
+            voice.save(file_path)
+        with Simulation(request=request) as simulation:
+            return simulation
+        
+    except Exception as e:
+        return jsonify({"error": str(e)})
+>>>>>>> e8e96b0114238bcbd48129204afacff908777cd1
