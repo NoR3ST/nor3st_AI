@@ -1,9 +1,10 @@
 from flask import Flask, request, send_file, jsonify
-# from ai_models.pronunciationAssessment import convert_score, mp32pcm, pronunciation_assessment
+from ai_models.my_senior import MySenior
+from ai_models.pronunciationAssessment import convert_score, mp32pcm, pronunciation_assessment
 from model.Education import Education
 from ai_models.lectureVoiceMaker import lectureVoiceMaker
-from ai_models.chatbot_gpt import MySenior
-# from ai_models.audioPreprocessing import match_target_amplitude, only_voice
+# from ai_models.chatbot_gpt import MySenior
+from ai_models.audioPreprocessing import match_target_amplitude, only_voice
 import os
 from pydub import AudioSegment
 
@@ -50,14 +51,14 @@ def save_sentences_with_voice():
     except Exception as e:
         return jsonify({"error": str(e)})
     
-@app.route("/save_doc", methods=["POST"])
-def save_doc():
-    try:
-        with MySenior(request=request, url="save_doc") as senior:
-            return senior["result"]
+# @app.route("/save_doc", methods=["POST"])
+# def save_doc():
+#     try:
+#         with MySenior(request=request, url="save_doc") as senior:
+#             return senior["result"]
         
-    except Exception as e:
-        return jsonify({"error": str(e)})
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
 
 @app.route("/question", methods=["POST"])
 def save_doc():
@@ -68,31 +69,42 @@ def save_doc():
     except Exception as e:
         return jsonify({"error": str(e)})
 
-# @app.route("/get_score", methods=["POST"])
-# def make_score():
-
-#     voice = request.files["voice"]
-
-#     if voice: 
-#         file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
-#         voice.save(file_path)
-
-#     # 오디오 전처리
-#     audio_file = AudioSegment.from_file(voice, format="mp3")
-#     audio_file = match_target_amplitude(audio_file, -11.0)
-#     preprocessed_audio = only_voice(audio_file)
-
-#     preprocessed_audio_filepath = os.path.join(file_path, '_preprocessing.mp3')
-#     preprocessed_audio.export(preprocessed_audio_filepath, format='mp3')
+@app.route("/get_score", methods=["POST"])
+def make_score():
     
-#     # 발음평가
-#     pcm_file_path = os.path.join(file_path, '_pcm.pcm')
-#     pcm_file = mp32pcm(preprocessed_audio_filepath, pcm_file_path)
+    voice = request.files["voice"]
+    script = request.form["script"]
 
-#     script = request.json["audio_sentence"]
+    # 파일 없는 경우
+    if voice is None:
+        return '파일이 존재하지 않습니다.'
+    
+    else:  # 파일 있는 경우 
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
+        voice.save(file_path)
+        print(file_path)
 
-#     score = pronunciation_assessment(pcm_file, script)
-#     score = convert_score((float(score)))
-#     print(score)
+        # 오디오 전처리
+        audio_file = AudioSegment.from_mp3(file_path)
+        audio_file = match_target_amplitude(audio_file, -11.0)
+        preprocessed_audio = only_voice(audio_file)
 
-#     return score
+        if preprocessed_audio is None:
+            score = 0
+
+        else:
+            preprocessed_audio_name = voice.filename.replace('.mp3', '') + '_preprocessed.mp3'
+            preprocessed_audio_filepath = os.path.join(app.config['UPLOAD_FOLDER'], preprocessed_audio_name)
+            preprocessed_audio.export(preprocessed_audio_filepath, format='mp3')
+
+            # 발음평가
+            pcm_file_name = voice.filename.replace('.mp3', '') + '_preprocessed' +  '_pcm.pcm'
+            pcm_file_path = os.path.join(app.config['UPLOAD_FOLDER'], pcm_file_name)
+            pcm_file = mp32pcm(preprocessed_audio_filepath, pcm_file_path)
+
+            score = pronunciation_assessment(pcm_file, script)
+            score = convert_score((float(score)))
+
+        result = {"score": score}
+
+        return jsonify(result) 

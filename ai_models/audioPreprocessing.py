@@ -33,7 +33,7 @@ def db_to_float(db, using_amplitude=True):
     
 
 # 침묵 탐지
-def detect_silence(audio_segment, min_silence_len=1000, silence_thresh=-16, seek_step=1):
+def detect_silence(audio_segment, min_silence_len=1000, silence_thresh=-16, seek_step=1):  
 
     seg_len = len(audio_segment)
 
@@ -87,7 +87,7 @@ def match_target_amplitude(sound, target_dBFS):
 
 
 # 비침묵 구간 탐지
-def detect_nonsilent(audio_segment, min_silence_len=900, silence_thresh=-16, seek_step=1):
+def detect_nonsilent(audio_segment, min_silence_len=900, silence_thresh=-20, seek_step=1):
 
   silent_ranges = detect_silence(audio_segment, min_silence_len, silence_thresh, seek_step)
   len_seg = len(audio_segment)
@@ -95,48 +95,65 @@ def detect_nonsilent(audio_segment, min_silence_len=900, silence_thresh=-16, see
   if not silent_ranges:
     print('침묵 구간이 존재하지 않음')
     return [[0, len_seg]]
-
-  if silent_ranges[0][0] == 0 and silent_ranges[0][1] == len_seg:
+  
+  elif silent_ranges[0][0] == 0 and silent_ranges[0][1] == len_seg:
     print('모든 구간이 침묵')
     return []
+  
+  else:
+    prev_end_i = 0
+    nonsilent_ranges = []
+    print('침묵 비침묵 구간이 둘다 존재')
 
-  prev_end_i = 0
-  nonsilent_ranges = []
-  for start_i, end_i in silent_ranges:
+    for start_i, end_i in silent_ranges:
       nonsilent_ranges.append([prev_end_i, start_i])
       prev_end_i = end_i
 
-  if end_i != len_seg:
+    if end_i != len_seg:
       nonsilent_ranges.append([prev_end_i, len_seg])
 
-  if nonsilent_ranges[0] == [0, 0]:
+    if nonsilent_ranges[0] == [0, 0]:
       nonsilent_ranges.pop(0)
 
-  return nonsilent_ranges
+    print(nonsilent_ranges)
+
+    return nonsilent_ranges
 
 
 # 원본 음성에서 침묵 구간을 뺀 음성 만듦
-def only_voice(audio_file, min_silence_length = 900, silence_thresh=-16):
+def only_voice(audio_file, min_silence_length=900, silence_thresh=-18):  
 
   non_silence_ranges = detect_nonsilent(audio_file, min_silence_len = min_silence_length, silence_thresh = silence_thresh)
 
-  non_silence_start = audio_file[0][0]
-  non_silence_end = audio_file[0][1]
-
-  print(non_silence_start, non_silence_end)
+  # print(non_silence_ranges[0][0], non_silence_ranges[0][1])
+  print(f'audio_file 길이: {len(audio_file)}')
+  print(f'non_silence_ranges : {len(non_silence_ranges)}')
+  print(non_silence_ranges)
 
   non_silence_audio_combined = AudioSegment.empty()
 
-  for non_silence_range in non_silence_ranges:
+  if len(non_silence_ranges) == 0:
+    print("다시 한번 녹음하세요.")
+    return
 
-    non_silence_audio = audio_file[non_silence_range[0]-300:non_silence_range[1]+300]
-    non_silence_audio_combined += non_silence_audio
-
+  else:
+    for non_silence_range in non_silence_ranges:
+      print(f'non_silence_ranges : {len(non_silence_ranges)}')
+      start_idx = max(0, non_silence_range[0] - 300)
+      end_idx = min(len(audio_file), non_silence_range[1] + 300)
+      non_silence_audio = audio_file[start_idx:end_idx]
+      non_silence_audio_combined += non_silence_audio
+  
+  print(non_silence_audio_combined)
   return non_silence_audio_combined
 
 
-# audio = './static/hello.m4a'
-# audio_file = AudioSegment.from_file(audio, format="m4a")
+# audio = './static/plz.mp3'
+# audio_file = AudioSegment.from_mp3(audio)
 # audio_file = match_target_amplitude(audio_file, -11.0)
 # voice = only_voice(audio_file)
-# voice.export('./static/hello_preprocessing.mp3', format='mp3')
+
+# if voice is None:
+#   print('다시 한번 녹음하세요')
+# else:
+#   voice.export('./static/plz_preprocessing.mp3', format='mp3')

@@ -8,6 +8,7 @@ from pydub import AudioSegment
 
 ## mp3 파일을 pcm 파일로
 def mp32pcm(audio_file_path, pcm_file_path):
+  
   audio_file_path = audio_file_path
   pcm_file_path = pcm_file_path
 
@@ -20,9 +21,11 @@ def mp32pcm(audio_file_path, pcm_file_path):
 
 ## api를 이용한 발음평가
 def pronunciation_assessment(pcm_file_path, script):
+  
   openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/PronunciationKor" # 한국어
   languageCode = "korean"
-  accessKey = "API_KEY"
+  accessKey = "ACCESS_KEY" 
+
   file = open(pcm_file_path, "rb")
   audioContents = base64.b64encode(file.read()).decode("utf8")
   file.close()
@@ -53,8 +56,7 @@ def convert_score(score):
   score = 100 - (score - 1) * 25
   return math.floor(score)
 
-
-# pcm_file_path = mp32pcm("./static/hello_preprocessing.mp3", "./static/hello.pcm")
+# pcm_file_path = mp32pcm()
 # print(pcm_file_path)
 
 # score = pronunciation_assessment(pcm_file_path, '안녕하세요')
