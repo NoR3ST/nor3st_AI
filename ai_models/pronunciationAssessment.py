@@ -4,7 +4,10 @@ import urllib3
 import json
 import base64
 from pydub import AudioSegment
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 ## mp3 파일을 pcm 파일로
 def mp32pcm(audio_file_path, pcm_file_path):
@@ -24,7 +27,7 @@ def pronunciation_assessment(pcm_file_path, script):
   
   openApiURL = "http://aiopen.etri.re.kr:8000/WiseASR/PronunciationKor" # 한국어
   languageCode = "korean"
-  accessKey = "ACCESS_KEY" 
+  accessKey = os.getenv("AI_API_KEY")
 
   file = open(pcm_file_path, "rb")
   audioContents = base64.b64encode(file.read()).decode("utf8")
