@@ -1,6 +1,9 @@
 import json
 from gtts import gTTS
 import os
+import json
+import urllib.request
+
 class lectureVoiceMaker:
     def __init__(self, full_text_file_location, filename):
         self.filename = filename
@@ -61,3 +64,29 @@ class lectureVoiceMaker:
         filename = f"{filepath}.json"
         with open(filename, "w") as file:
             json.dump(self.result, file, indent=4, ensure_ascii=False)
+
+
+    def korean_to_vietnamse(self, korean):
+       
+       korean = korean
+       client_id = "" 
+       client_secret = "" 
+       encText = urllib.parse.quote(korean)
+       data = "source=ko&target=vi&text=" + encText
+
+       url = "https://openapi.naver.com/v1/papago/n2mt"
+       request = urllib.request.Request(url)
+       request.add_header("X-Naver-Client-Id",client_id)
+       request.add_header("X-Naver-Client-Secret",client_secret)
+       response = urllib.request.urlopen(request, data=data.encode("utf-8"))
+       rescode = response.getcode()
+
+       if(rescode==200):
+           response_body = response.read()
+           response_data = json.loads(response_body)
+           translated_text = response_data["message"]["result"]["translatedText"]
+           print(translated_text)
+           return translated_text
+       else:
+           print("Error Code:" + rescode)
+           return f'"Error Code : "{rescode}'
