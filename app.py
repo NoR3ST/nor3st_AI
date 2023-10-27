@@ -62,14 +62,14 @@ def save_sentences_with_voice():
 #     except Exception as e:
 #         return jsonify({"error": str(e)})
 
-@app.route("/question", methods=["POST"])
-def question_to_senior():
-    try:
-        with MySenior(request=request, url="question") as senior:
-            return senior["answer"]
+# @app.route("/question", methods=["POST"])
+# def question_to_senior():
+#     try:
+#         with MySenior(request=request, url="question") as senior:
+#             return senior["answer"]
         
-    except Exception as e:
-        return jsonify({"error": str(e)})
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
 
 @app.route("/get_score", methods=["POST"])
 def make_score():
