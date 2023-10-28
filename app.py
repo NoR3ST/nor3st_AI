@@ -91,7 +91,7 @@ def make_score():
         audio_file = match_target_amplitude(audio_file, -11.0)
         preprocessed_audio = only_voice(audio_file)
 
-        if preprocessed_audio is None:
+        if preprocessed_audio is None:  # 침묵일 때
             score = 0
 
         else:
@@ -122,5 +122,65 @@ def simulation():
         with Simulation(request=request) as simulation:
             return simulation
         
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+
+@app.route("/get_sentence2voice", methods=["POST"])
+def get_sentence2voice(): 
+    try:
+        # 요청에서 파일과 저장 위치를 가져옵니다.
+        recieved_file = request.files["sentence_file"]
+        file_name = request.form["filename"]
+
+        # 파일 저장 경로를 설정합니다.
+        filename = f"{file_name}.json"        
+        # recieved_filepath = os.path.join(app.config['UPLOAD_FOLDER'], "lecture_source/prototype", filename)
+        print('\n\n', filename, '\n\n')
+        recieved_filepath = app.config['UPLOAD_FOLDER'] + "/lecture_source/prototype"
+        if not os.path.exists(recieved_filepath):
+            os.makedirs(recieved_filepath)
+
+        # 파일을 저장합니다.
+        recieved_file.save(recieved_filepath + '/' + filename)
+        final_recieved_filepath = recieved_filepath + '/' + filename
+
+        lecturevoicemaker = lectureVoiceMaker(final_recieved_filepath, file_name)
+        text = lecturevoicemaker.full_text_list
+        korean = text[0]['korean']  
+        
+        voice = lecturevoicemaker.make_entire_voice(korean)
+        return send_file(voice)
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
+    
+
+@app.route("/get_kor2viet", methods=["POST"])
+def get_kor2viet(): 
+    try:
+        # 요청에서 파일과 저장 위치를 가져옵니다.
+        recieved_file = request.files["sentence_file"]
+        file_name = request.form["filename"]
+
+        # 파일 저장 경로를 설정합니다.
+        filename = f"{file_name}.json"        
+        # recieved_filepath = os.path.join(app.config['UPLOAD_FOLDER'], "lecture_source/prototype", filename)
+        recieved_filepath = app.config['UPLOAD_FOLDER'] + "/lecture_source/prototype"
+        if not os.path.exists(recieved_filepath):
+            os.makedirs(recieved_filepath)
+
+        # 파일을 저장합니다.
+        recieved_file.save(recieved_filepath + '/' + filename)
+        final_recieved_filepath = recieved_filepath + '/' + filename
+
+        lecturevoicemaker = lectureVoiceMaker(final_recieved_filepath, file_name)
+        text = lecturevoicemaker.full_text_list
+        korean = text[0]['korean']  
+        
+        vietnamese = lecturevoicemaker.korean_to_vietnamse(korean)
+
+        return vietnamese
+    
     except Exception as e:
         return jsonify({"error": str(e)})
