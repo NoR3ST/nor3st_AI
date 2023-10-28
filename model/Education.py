@@ -23,7 +23,3 @@ class Education:
     
     def user_voice_to_text(self):
         return self.model.transcribe(f'static/{self.student_voice.filename}')
-    
-    def user_voice_to_score(self):
-	    # self.result["score"] = 
-        pass

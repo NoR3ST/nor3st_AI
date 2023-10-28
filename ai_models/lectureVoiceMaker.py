@@ -10,7 +10,7 @@ class lectureVoiceMaker:
         self.full_text_file_location = full_text_file_location
         self.full_text_list = []
         self.result = []
-        with open(self.full_text_file_location, 'r') as jsonFile:
+        with open(self.full_text_file_location, 'r', encoding='utf-8') as jsonFile:
             self.full_text_list = json.load(jsonFile)
             
     def __enter__(self):
@@ -29,6 +29,21 @@ class lectureVoiceMaker:
         file_path = os.path.join("lecture_source/voices", word_file_name)
         tts.save(file_path)
         return word_file_name
+    
+    def make_entire_voice(self, text):
+        tts = gTTS(text, lang="ko")
+        # dir_name = f"lecture_source/voices/{self.filename}"
+        dir_name = f"./static/lecture_source/voices/{self.filename}"
+        if not os.path.exists(dir_name):
+            os.makedirs(dir_name)
+        
+        # word_file_name = f"{self.filename}/{self.filename}.mp3"
+        # file_path = os.path.join("lecture_source/voices", word_file_name)
+        word_file_name = f"{self.filename}.mp3"
+        file_path = f'{dir_name}/{word_file_name}' 
+        tts.save(file_path)
+        
+        return file_path
     
     def sentence_to_word(self, full_sentence, number):
         structure_sentence = {
@@ -85,8 +100,6 @@ class lectureVoiceMaker:
            response_body = response.read()
            response_data = json.loads(response_body)
            translated_text = response_data["message"]["result"]["translatedText"]
-           print(translated_text)
            return translated_text
        else:
-           print("Error Code:" + rescode)
            return f'"Error Code : "{rescode}'
