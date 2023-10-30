@@ -1,3 +1,5 @@
+pydub
+flask-cors
 openai
 librosa
 boto
