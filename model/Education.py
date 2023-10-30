@@ -25,7 +25,7 @@ class Education:
     def user_voice_to_text(self):
         command = [
             'whisper',
-            f'static/{self.student_voice.filename}',
+            f'static/{self.student_voice}',
             '--language',
             'Korean',
             '--model',
