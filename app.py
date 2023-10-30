@@ -192,16 +192,7 @@ def get_sentence2voice():
 @app.route("/simulation/question_text", methods=["POST"])
 def simulation_text():
     try:
-        voice = request.files["voice"].read()
-        if voice:
-            audio = AudioSegment.from_file(BytesIO(voice), format="wav")
-            
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], "simulation")
-            file = audio.export(file_path, format="mp3").read()
-            request.files["voice"] = file
-
-            with Simulation(request=request) as simulation:
-                return simulation
+        voice = request.files["voice"]
         if voice:
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], "simulation_test.wav")
             audio = AudioSegment.from_file(voice).export(file_path, format="mp3")
