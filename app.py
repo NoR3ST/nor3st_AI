@@ -181,4 +181,5 @@ def simulation_text():
         
     except Exception as e:
         return jsonify({"error": str(e)})
-    
+
+## 주석 처리 ##    
