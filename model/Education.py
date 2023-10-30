@@ -16,7 +16,7 @@ class Education:
     def __enter__(self):
         if self.url == "text":
             self.result["answer"] = self.user_voice_to_text()
-            return self.student_voice
+            return self.result
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
