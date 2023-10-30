@@ -194,7 +194,7 @@ def simulation_text():
     try:
         voice = request.files["voice"].read()
         if voice:
-            audio = AudioSegment.from_file(io.BytesIO(voice), format="wav")
+            audio = AudioSegment.from_file(BytesIO(voice), format="wav")
             
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], "simulation")
             file = audio.export(file_path, format="mp3").read()
