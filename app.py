@@ -22,17 +22,7 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 def hello():
     return "hello"
 
-@app.route('/get_answer', methods=["GET"])
-def get_answer():
-    
-    voice = request.files["voice"]
-    if voice:
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
-        voice.save(file_path)
-        
-    with Education(request, url="text") as result:
-        transcribed_text = result["answer"]["segments"][0]["text"]
-        return transcribed_text
+
         
 @app.route("/save_sentences_with_voice", methods=["POST"])
 def save_sentences_with_voice():
@@ -109,7 +99,11 @@ def make_score():
             score = pronunciation_assessment(pcm_file, script)
             score = convert_score((float(score)))
 
-        result = {"score": score}
+        transcribed_text = ""
+        with Education(request, url="text") as result:
+            transcribed_text = result["answer"]["segments"][0]["text"]
+
+        result = {"score": score, "answer": transcribed_text}
 
         return jsonify(result) 
     
