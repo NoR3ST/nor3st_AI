@@ -139,7 +139,7 @@ def simulation():
 #         if not os.path.exists(recieved_filepath):
 #             os.makedirs(recieved_filepath)
 
-#         # 파일을 저장합니다.
+#         # 파일을 저장합니다. #### 
 #         recieved_file.save(recieved_filepath + '/' + filename)
 #         final_recieved_filepath = recieved_filepath + '/' + filename
 
