@@ -31,7 +31,8 @@ class Education:
         ]
         try:
             result = subprocess.run(command, check=True)
-            with open(f'{self.student_voice.filename}.txt', 'r') as result:            
+            filename = f"{self.student_voice.filename.split('.')[0]}.txt"
+            with open(filename, 'r') as result:            
                 return result.read()
         except subprocess.CalledProcessError as e:
             return (f"오류 발생: {e}")
