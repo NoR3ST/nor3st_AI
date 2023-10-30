@@ -33,6 +33,6 @@ class Education:
             result = subprocess.run(command, check=True)
             filename = f"{self.student_voice.filename.split('.')[0]}.txt"
             with open(filename, 'r') as result:            
-                return result.read()
+                return result.read().replace("\n", "")
         except subprocess.CalledProcessError as e:
             return (f"오류 발생: {e}")
