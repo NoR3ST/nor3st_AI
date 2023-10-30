@@ -157,7 +157,7 @@ def get_sentence2voice():
         response_data = {
             'audio': encoded_audio,
             'filename': file_name,
-            'korean' : vietnamese
+            'vietnamese' : vietnamese
         }
         return jsonify(response_data)
 
