@@ -34,6 +34,8 @@ class Education:
         try:
             result = subprocess.run(command, check=True)
             filename = f"{self.student_voice.split('.')[0]}.txt"
+            if self.student_voice == "simulation_test.wav":
+                filename = "simulation_test.txt"
             with open(filename, 'r') as result:            
                 return result.read().replace("\n", "")
         except subprocess.CalledProcessError as e:
