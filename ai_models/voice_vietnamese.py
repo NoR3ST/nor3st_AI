@@ -32,8 +32,8 @@ def make_entire_voice(text):
 def korean_to_vietnamse(korean):
        
        korean = korean
-       client_id = "MD1pAwfJHP32WwnJo5o_" 
-       client_secret = "nUDJbc0ui3" 
+       client_id = "" 
+       client_secret = "" 
     #    encText = urllib3.parse.quote(korean)
        encText = urllib.parse.quote(korean)
 
