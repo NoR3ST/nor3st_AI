@@ -1,4 +1,4 @@
-from ai_models.whisper import Whisper
+import subprocess
 import logging as log
 log.getLogger(__name__)
 log.basicConfig(level=log.DEBUG)
@@ -7,7 +7,6 @@ log.basicConfig(level=log.DEBUG, format="'%(asctime)s - %(message)s'")
 
 class Education:
     def __init__(self, request, url = None):
-        self.model = Whisper().MODEL
         self.student_voice = request.files["voice"]
         self.url = url
         self.result = {}
@@ -22,4 +21,16 @@ class Education:
     
     
     def user_voice_to_text(self):
-        return self.model.transcribe(f'static/{self.student_voice.filename}')
+        command = [
+            'whisper',
+            f'static/{self.student_voice.filename}',
+            '--language',
+            'Korean',
+            '--model',
+            'tiny'
+        ]
+        try:
+            result = subprocess.run(command, check=True)
+            return result.stdout
+        except subprocess.CalledProcessError as e:
+            return (f"오류 발생: {e}")
