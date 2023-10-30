@@ -21,6 +21,8 @@ class Simulation:
         self.answer = ""
         with Education(request=request, url = "text") as result:
             self.answer = result["answer"]["segments"][0]["text"]
+        
+        self.result["answer"] = self.answer
 
         self.question = request.form["question"]
         template = """질문은 {question}이고 질문에 대한 대답으로 {answer}가 맥락, 어휘, 문법에 맞다면 TRUE, 문법에 틀리면 FALSE 만으로 리턴해줘."""
@@ -30,7 +32,8 @@ class Simulation:
     
     def __enter__(self):
         
-        return self.get_answer()
+        # return self.get_answer()
+        return self.result
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
