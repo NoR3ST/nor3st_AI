@@ -190,7 +190,7 @@ def get_kor2viet():
 
 
 @app.route("/simulation/question_text", methods=["POST"])
-def simulation():
+def simulation_text():
     try:
         voice = request.files["voice"].read()
         if voice:
