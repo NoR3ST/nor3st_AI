@@ -31,6 +31,7 @@ class Education:
         ]
         try:
             result = subprocess.run(command, check=True)
-            return result.stdout
+            with open(f'{self.student_voice.filename}.txt', 'r') as result:            
+                return result.read()
         except subprocess.CalledProcessError as e:
             return (f"오류 발생: {e}")
