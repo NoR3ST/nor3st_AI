@@ -84,8 +84,8 @@ class lectureVoiceMaker:
     def korean_to_vietnamse(self, korean):
        
        korean = korean
-       client_id = "" 
-       client_secret = "" 
+       client_id = "CLIENT_ID" 
+       client_secret = "CLIENT_SECREST" 
        encText = urllib.parse.quote(korean)
        data = "source=ko&target=vi&text=" + encText
 
