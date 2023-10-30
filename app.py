@@ -101,7 +101,7 @@ def make_score():
 
         transcribed_text = ""
         with Education(request, url="text") as result:
-            transcribed_text = result["answer"]["segments"][0]["text"]
+            transcribed_text = result["answer"]
 
         result = {"score": score, "answer": transcribed_text}
 
@@ -193,7 +193,7 @@ def simulation_text():
             file_path = os.path.join(app.config['UPLOAD_FOLDER'], "simulation")
             file = audio.export(file_path, format="mp3").read()
             request.files["voice"] = file
-            
+
             with Simulation(request=request) as simulation:
                 return simulation
         
