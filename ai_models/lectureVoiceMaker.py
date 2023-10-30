@@ -2,7 +2,7 @@ import json
 from gtts import gTTS
 import os
 import json
-import urllib.request
+
 
 class lectureVoiceMaker:
     def __init__(self, full_text_file_location, filename):
@@ -30,20 +30,20 @@ class lectureVoiceMaker:
         tts.save(file_path)
         return word_file_name
     
-    def make_entire_voice(self, text):
-        tts = gTTS(text, lang="ko")
-        # dir_name = f"lecture_source/voices/{self.filename}"
-        dir_name = f"./static/lecture_source/voices/{self.filename}"
-        if not os.path.exists(dir_name):
-            os.makedirs(dir_name)
+    # def make_entire_voice(self, text):
+    #     tts = gTTS(text, lang="ko")
+    #     # dir_name = f"lecture_source/voices/{self.filename}"
+    #     dir_name = f"./static/lecture_source/voices/{self.filename}"
+    #     if not os.path.exists(dir_name):
+    #         os.makedirs(dir_name)
         
-        # word_file_name = f"{self.filename}/{self.filename}.mp3"
-        # file_path = os.path.join("lecture_source/voices", word_file_name)
-        word_file_name = f"{self.filename}.mp3"
-        file_path = f'{dir_name}/{word_file_name}' 
-        tts.save(file_path)
+    #     # word_file_name = f"{self.filename}/{self.filename}.mp3"
+    #     # file_path = os.path.join("lecture_source/voices", word_file_name)
+    #     word_file_name = f"{self.filename}.mp3"
+    #     file_path = f'{dir_name}/{word_file_name}' 
+    #     tts.save(file_path)
         
-        return file_path
+    #     return file_path
     
     def sentence_to_word(self, full_sentence, number):
         structure_sentence = {
@@ -81,25 +81,25 @@ class lectureVoiceMaker:
             json.dump(self.result, file, indent=4, ensure_ascii=False)
 
 
-    def korean_to_vietnamse(self, korean):
+    # def korean_to_vietnamse(self, korean):
        
-       korean = korean
-       client_id = "" 
-       client_secret = "" 
-       encText = urllib.parse.quote(korean)
-       data = "source=ko&target=vi&text=" + encText
+    #    korean = korean
+    #    client_id = "CLIENT_ID" 
+    #    client_secret = "CLIENT_SECREST" 
+    #    encText = urllib.parse.quote(korean)
+    #    data = "source=ko&target=vi&text=" + encText
 
-       url = "https://openapi.naver.com/v1/papago/n2mt"
-       request = urllib.request.Request(url)
-       request.add_header("X-Naver-Client-Id",client_id)
-       request.add_header("X-Naver-Client-Secret",client_secret)
-       response = urllib.request.urlopen(request, data=data.encode("utf-8"))
-       rescode = response.getcode()
+    #    url = "https://openapi.naver.com/v1/papago/n2mt"
+    #    request = urllib.request.Request(url)
+    #    request.add_header("X-Naver-Client-Id",client_id)
+    #    request.add_header("X-Naver-Client-Secret",client_secret)
+    #    response = urllib.request.urlopen(request, data=data.encode("utf-8"))
+    #    rescode = response.getcode()
 
-       if(rescode==200):
-           response_body = response.read()
-           response_data = json.loads(response_body)
-           translated_text = response_data["message"]["result"]["translatedText"]
-           return translated_text
-       else:
-           return f'"Error Code : "{rescode}'
+    #    if(rescode==200):
+    #        response_body = response.read()
+    #        response_data = json.loads(response_body)
+    #        translated_text = response_data["message"]["result"]["translatedText"]
+    #        return translated_text
+    #    else:
+    #        return f'"Error Code : "{rescode}'
