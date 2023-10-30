@@ -139,7 +139,7 @@ def simulation():
 #         if not os.path.exists(recieved_filepath):
 #             os.makedirs(recieved_filepath)
 
-#         # 파일을 저장합니다.
+#         # 파일을 저장합니다. #### 
 #         recieved_file.save(recieved_filepath + '/' + filename)
 #         final_recieved_filepath = recieved_filepath + '/' + filename
 
@@ -168,8 +168,9 @@ def simulation():
 @app.route("/get_sentence2voice_viet", methods=["POST"])
 def get_sentence2voice(): 
     try:
-        data = request.data
-        korean = data.decode('utf-8')
+        data = request.get_json()
+        korean = data['korean']
+        # korean = data.decode('utf-8')
 
         voice = make_entire_voice(korean)
         vietnamese = korean_to_vietnamse(korean)
