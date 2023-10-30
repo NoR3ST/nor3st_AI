@@ -7,14 +7,16 @@ log.basicConfig(level=log.DEBUG, format="'%(asctime)s - %(message)s'")
 
 class Education:
     def __init__(self, request, url = None):
-        self.student_voice = request.files["voice"]
+        self.student_voice = request.files["voice"].filename
+        if not self.student_voice:
+            self.student_voice = "simulation_test.wav"
         self.url = url
         self.result = {}
         
     def __enter__(self):
         if self.url == "text":
             self.result["answer"] = self.user_voice_to_text()
-            return self.result
+            return self.student_voice
 
     def __exit__(self, exc_type, exc_value, traceback):
         pass
@@ -31,7 +33,7 @@ class Education:
         ]
         try:
             result = subprocess.run(command, check=True)
-            filename = f"{self.student_voice.filename.split('.')[0]}.txt"
+            filename = f"{self.student_voice.split('.')[0]}.txt"
             with open(filename, 'r') as result:            
                 return result.read().replace("\n", "")
         except subprocess.CalledProcessError as e:

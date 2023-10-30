@@ -10,9 +10,8 @@ from ai_models.audioPreprocessing import match_target_amplitude, only_voice
 from ai_models.my_senior import MySenior
 from ai_models.simulation import Simulation 
 import os
-import io
+from io import BytesIO
 from pydub import AudioSegment
-
 
 app = Flask(__name__)
 CORS(app)
@@ -203,7 +202,13 @@ def simulation_text():
 
             with Simulation(request=request) as simulation:
                 return simulation
-        
+        if voice:
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], "simulation_test.wav")
+            audio = AudioSegment.from_file(voice).export(file_path, format="mp3")
+
+        with Simulation(request=request) as simulation:
+            return simulation
+
     except Exception as e:
         return jsonify({"error": str(e)})
     
