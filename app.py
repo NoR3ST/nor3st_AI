@@ -1,6 +1,6 @@
+import base64
 from flask import Flask, request, send_file, jsonify, send_from_directory
 from flask_cors import CORS
-import requests
 from ai_models.my_senior import MySenior
 from ai_models.pronunciationAssessment import convert_score, mp32pcm, pronunciation_assessment
 from model.Education import Education
@@ -149,47 +149,20 @@ def get_sentence2voice():
         voice = lecturevoicemaker.make_entire_voice(korean)
         vietnamese = lecturevoicemaker.korean_to_vietnamse(korean)
 
-        files = open(voice, 'rb')
+        # 파일 객체를 읽고 인코딩합니다.
+        audio_data = open(voice, 'rb').read()
+        encoded_audio = base64.b64encode(audio_data).decode()
 
-        if files:
-            return jsonify({"voice": voice, "vietnamese": vietnamese})
-        else:
-            return jsonify({"error": "File could not be opened. Please try again."})
+        # JSON 응답 생성
+        response_data = {
+            'audio': encoded_audio,
+            'filename': file_name,
+            'korean' : vietnamese
+        }
+        return jsonify(response_data)
 
     except Exception as e:
         return jsonify({"error": str(e)})
-    
-    
-
-# @app.route("/get_kor2viet", methods=["POST"])
-# def get_kor2viet(): 
-#     try:
-#         # 요청에서 파일과 저장 위치를 가져옵니다.
-#         recieved_file = request.files["sentence_file"]
-#         file_name = request.form["filename"]
-
-#         # 파일 저장 경로를 설정합니다.
-#         filename = f"{file_name}.json"        
-#         # recieved_filepath = os.path.join(app.config['UPLOAD_FOLDER'], "lecture_source/prototype", filename)
-#         recieved_filepath = app.config['UPLOAD_FOLDER'] + "/lecture_source/prototype"
-#         if not os.path.exists(recieved_filepath):
-#             os.makedirs(recieved_filepath)
-
-#         # 파일을 저장합니다.
-#         recieved_file.save(recieved_filepath + '/' + filename)
-#         final_recieved_filepath = recieved_filepath + '/' + filename
-
-#         lecturevoicemaker = lectureVoiceMaker(final_recieved_filepath, file_name)
-#         text = lecturevoicemaker.full_text_list
-#         korean = text[0]['korean']  
-        
-#         vietnamese = lecturevoicemaker.korean_to_vietnamse(korean)
-
-#         return vietnamese
-    
-#     except Exception as e:
-#         return jsonify({"error": str(e)})
-    
 
 
 @app.route("/simulation/question_text", methods=["POST"])
