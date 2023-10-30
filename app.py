@@ -1,5 +1,6 @@
-from flask import Flask, request, send_file, jsonify
+from flask import Flask, request, send_file, jsonify, send_from_directory
 from flask_cors import CORS
+import requests
 from ai_models.my_senior import MySenior
 from ai_models.pronunciationAssessment import convert_score, mp32pcm, pronunciation_assessment
 from model.Education import Education
@@ -122,7 +123,7 @@ def simulation():
         return jsonify({"error": str(e)})
     
 
-@app.route("/get_sentence2voice", methods=["POST"])
+@app.route("/get_sentence2voice_viet", methods=["POST"])
 def get_sentence2voice(): 
     try:
         # 요청에서 파일과 저장 위치를 가져옵니다.
@@ -146,40 +147,48 @@ def get_sentence2voice():
         korean = text[0]['korean']  
         
         voice = lecturevoicemaker.make_entire_voice(korean)
-        return send_file(voice)
-
-    except Exception as e:
-        return jsonify({"error": str(e)})
-    
-
-@app.route("/get_kor2viet", methods=["POST"])
-def get_kor2viet(): 
-    try:
-        # 요청에서 파일과 저장 위치를 가져옵니다.
-        recieved_file = request.files["sentence_file"]
-        file_name = request.form["filename"]
-
-        # 파일 저장 경로를 설정합니다.
-        filename = f"{file_name}.json"        
-        # recieved_filepath = os.path.join(app.config['UPLOAD_FOLDER'], "lecture_source/prototype", filename)
-        recieved_filepath = app.config['UPLOAD_FOLDER'] + "/lecture_source/prototype"
-        if not os.path.exists(recieved_filepath):
-            os.makedirs(recieved_filepath)
-
-        # 파일을 저장합니다.
-        recieved_file.save(recieved_filepath + '/' + filename)
-        final_recieved_filepath = recieved_filepath + '/' + filename
-
-        lecturevoicemaker = lectureVoiceMaker(final_recieved_filepath, file_name)
-        text = lecturevoicemaker.full_text_list
-        korean = text[0]['korean']  
-        
         vietnamese = lecturevoicemaker.korean_to_vietnamse(korean)
 
-        return vietnamese
-    
+        files = open(voice, 'rb')
+
+        if files:
+            return jsonify({"voice": voice, "vietnamese": vietnamese})
+        else:
+            return jsonify({"error": "File could not be opened. Please try again."})
+
     except Exception as e:
         return jsonify({"error": str(e)})
+    
+    
+
+# @app.route("/get_kor2viet", methods=["POST"])
+# def get_kor2viet(): 
+#     try:
+#         # 요청에서 파일과 저장 위치를 가져옵니다.
+#         recieved_file = request.files["sentence_file"]
+#         file_name = request.form["filename"]
+
+#         # 파일 저장 경로를 설정합니다.
+#         filename = f"{file_name}.json"        
+#         # recieved_filepath = os.path.join(app.config['UPLOAD_FOLDER'], "lecture_source/prototype", filename)
+#         recieved_filepath = app.config['UPLOAD_FOLDER'] + "/lecture_source/prototype"
+#         if not os.path.exists(recieved_filepath):
+#             os.makedirs(recieved_filepath)
+
+#         # 파일을 저장합니다.
+#         recieved_file.save(recieved_filepath + '/' + filename)
+#         final_recieved_filepath = recieved_filepath + '/' + filename
+
+#         lecturevoicemaker = lectureVoiceMaker(final_recieved_filepath, file_name)
+#         text = lecturevoicemaker.full_text_list
+#         korean = text[0]['korean']  
+        
+#         vietnamese = lecturevoicemaker.korean_to_vietnamse(korean)
+
+#         return vietnamese
+    
+#     except Exception as e:
+#         return jsonify({"error": str(e)})
     
 
 
