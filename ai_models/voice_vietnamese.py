@@ -4,7 +4,9 @@ from gtts import gTTS
 import urllib3
 import urllib.request
 import urllib.parse
+from dotenv import load_dotenv
 
+load_dotenv()
 
 def make_entire_voice(text):
 
@@ -32,8 +34,8 @@ def make_entire_voice(text):
 def korean_to_vietnamse(korean):
        
        korean = korean
-       client_id = "" 
-       client_secret = "" 
+       client_id = os.getenv("NAVER_ID") 
+       client_secret = os.getenv("NAVER_SECRET")
     #    encText = urllib3.parse.quote(korean)
        encText = urllib.parse.quote(korean)
 
