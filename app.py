@@ -12,6 +12,7 @@ from ai_models.simulation import Simulation
 import os
 from io import BytesIO
 from pydub import AudioSegment
+import uuid
 
 app = Flask(__name__)
 CORS(app)
@@ -73,17 +74,18 @@ def make_score():
     # 파일 없는 경우
     if voice is None:
         return '파일이 존재하지 않습니다.'
-    
     else:  # 파일 있는 경우 
         file_path = os.path.join(app.config['UPLOAD_FOLDER'], voice.filename)
-        voice.save(file_path)
-        print(file_path)
-
+        audio = AudioSegment.from_file(voice).export(file_path, format="mp3")
+        
         # 오디오 전처리
         audio_file = AudioSegment.from_mp3(file_path)
         audio_file = match_target_amplitude(audio_file, -11.0)
         preprocessed_audio = only_voice(audio_file)
 
+        score = 0 
+        transcribed_text = ""
+        
         if preprocessed_audio is None:  # 침묵일 때
             score = 0
 
@@ -100,9 +102,8 @@ def make_score():
             score = pronunciation_assessment(pcm_file, script)
             score = convert_score((float(score)))
 
-        transcribed_text = ""
-        with Education(request, url="text") as result:
-            transcribed_text = result["answer"]
+            with Education(request, url="text") as result:
+                transcribed_text = result["answer"]
 
         result = {"score": score, "answer": transcribed_text}
 
