@@ -167,8 +167,7 @@ def simulation():
 @app.route("/get_sentence2voice_viet", methods=["POST"])
 def get_sentence2voice(): 
     try:
-        data = request.get_json()
-        korean = data['korean']
+        korean = request.forms["korean"]
         # korean = data.decode('utf-8')
 
         voice = make_entire_voice(korean)
@@ -194,7 +193,7 @@ def simulation_text():
     try:
         voice = request.files["voice"]
         if voice:
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], "simulation_test.wav")
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], "simulation_test.mp3")
             audio = AudioSegment.from_file(voice).export(file_path, format="mp3")
 
         with Simulation(request=request) as simulation:
