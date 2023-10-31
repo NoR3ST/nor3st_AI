@@ -167,7 +167,7 @@ def simulation():
 @app.route("/get_sentence2voice_viet", methods=["POST"])
 def get_sentence2voice(): 
     try:
-        korean = request.forms["korean"]
+        korean = request.form["korean"]
         # korean = data.decode('utf-8')
 
         voice = make_entire_voice(korean)
