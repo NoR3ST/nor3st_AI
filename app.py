@@ -20,6 +20,7 @@ CORS(app)
 UPLOAD_FOLDER = 'static'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+#연결 확인테스트용
 @app.route('/', methods=["GET"])
 def hello():
     return "hello"
@@ -102,7 +103,7 @@ def make_score():
             score = pronunciation_assessment(pcm_file, script)
             score = convert_score((float(score)))
 
-            with Education(request, url="text") as result:
+            with Education(request, voice_path=preprocessed_audio_filepath, url="text") as result:
                 transcribed_text = result["answer"]
 
         result = {"score": score, "answer": transcribed_text}
@@ -202,4 +203,24 @@ def simulation_text():
 
     except Exception as e:
         return jsonify({"error": str(e)})
+
+#정답(String)과 제출 오디오(Audio) request 시 맥락에 맞는지 판단 후 return(boolean) 기능
+@app.route("/simualtion/check_answer", methods=["POST"])
+def simulation_check_answer():
+    user_id = request.form["user_id"]
+    question = request.form["question"]
+    answer_voice = request.files["voice"]
+
+    user_id_directory = os.path.join(app.config['UPLOAD_FOLDER'], "user", user_id)
+    if not os.path.exists(user_id_directory):
+        os.makedirs(user_id_directory)
     
+    voice_id = str(uuid.uuid1())
+
+
+    if answer_voice:
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'],"user", user_id, voice_id)
+        audio = AudioSegment.from_file(answer_voice).export(file_path, format="mp3")
+
+        with Simulation(request=request, voice_path=file_path) as result:
+            return result

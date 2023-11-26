@@ -6,10 +6,8 @@ log.basicConfig(level=log.DEBUG, format="'%(asctime)s - %(message)s'")
 
 
 class Education:
-    def __init__(self, request, url = None):
-        self.student_voice = request.files["voice"].filename
-        if not self.student_voice:
-            self.student_voice = "simulation_test.wav"
+    def __init__(self, request, voice_path, url = None):
+        self.student_voice_path = voice_path
         self.url = url
         self.result = {}
         
@@ -25,7 +23,7 @@ class Education:
     def user_voice_to_text(self):
         command = [
             'whisper',
-            f'static/{self.student_voice}',
+            f'{self.student_voice_path}',
             '--language',
             'Korean',
             '--model',
@@ -33,10 +31,5 @@ class Education:
         ]
         try:
             result = subprocess.run(command, check=True)
-            filename = f"{self.student_voice.split('.')[0]}.txt"
-            if self.student_voice == "simulation_test.wav":
-                filename = "simulation_test.txt"
-            with open(filename, 'r') as result:            
-                return result.read().replace("\n", "")
         except subprocess.CalledProcessError as e:
             return (f"오류 발생: {e}")
