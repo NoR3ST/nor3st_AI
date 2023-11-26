@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 from model.Education import Education
 
@@ -12,6 +13,12 @@ from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
 
 load_dotenv()
+
+if not os.path.isdir('logs'):
+  os.mkdir('logs')
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
 
 class Simulation:
     def __init__(self, request, voice_path) -> None:
@@ -49,6 +56,7 @@ class Simulation:
                 question=self.question, user_answer=self.answer, model_answer = self.model_answer
             ).to_messages()
         )
+        logger.info(answer)
 
         if "T" in answer.content:
             self.result["answer"] = True
