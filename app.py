@@ -208,7 +208,6 @@ def simulation_text():
 @app.route("/simualtion/check_answer", methods=["POST"])
 def simulation_check_answer():
     user_id = request.form["user_id"]
-    question = request.form["question"]
     answer_voice = request.files["voice"]
 
     user_id_directory = os.path.join(app.config['UPLOAD_FOLDER'], "user", user_id)
