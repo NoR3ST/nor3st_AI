@@ -37,7 +37,7 @@ class Simulation:
         self.result = {}
     
     def __enter__(self):
-        self.get_answer()
+        self.result["answer"] = self.get_answer()
         return self.result
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -59,6 +59,6 @@ class Simulation:
         logger.info(answer)
 
         if "T" in answer.content:
-            self.result["answer"] = True
+            return True
         else:
-            self.result["answer"] = False
+            return False
