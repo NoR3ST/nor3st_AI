@@ -36,7 +36,7 @@ class Simulation:
         pass
         
     def get_answer(self):
-        if len(self.answer) < 3:
+        if len(self.answer) < 3 or None:
             return "False"
         
         prompt = ChatPromptTemplate.from_messages([
